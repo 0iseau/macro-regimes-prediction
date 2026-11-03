@@ -12,9 +12,6 @@ DATA = ROOT / "data"
 RAW = DATA / "raw"
 FIGURES = ROOT / "figures"
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (academic project; HEC Lausanne)"}
-
-
 def download(url: str, retries: int = 3, timeout: tuple = (10, 30)) -> bytes:
     """GET a URL and return its body, retrying transient failures with backoff.
 
@@ -23,7 +20,9 @@ def download(url: str, retries: int = 3, timeout: tuple = (10, 30)) -> bytes:
     """
     for attempt in range(retries):
         try:
-            resp = requests.get(url, headers=HEADERS, timeout=timeout)
+            # No custom User-Agent: FRED silently drops custom ones from some
+            # networks (e.g. Nuvolos) while answering the requests default.
+            resp = requests.get(url, timeout=timeout)
             resp.raise_for_status()
             return resp.content
         except requests.RequestException as exc:
