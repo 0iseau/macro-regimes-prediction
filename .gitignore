@@ -231,7 +231,8 @@ docs/
 # Raw downloads: several FRED series are under third-party copyright
 # (Moody's, Cboe, NASDAQ, University of Michigan); regenerate them with
 # code/01_get_data.py (see README).
-data/raw/
+data/raw/*
+!data/raw/.gitkeep
 
 # Editor settings
 .idea/
