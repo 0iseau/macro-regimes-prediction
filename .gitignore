@@ -233,6 +233,7 @@ docs/
 # code/01_get_data.py (see README).
 data/raw/*
 !data/raw/.gitkeep
+!data/raw/README.md
 
 # Editor settings
 .idea/
