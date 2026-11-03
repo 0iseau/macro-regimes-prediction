@@ -218,3 +218,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---------------------------------------------------------------
+# Project-specific rules
+# ---------------------------------------------------------------
+# Course documents, not project work
+docs/
+
+# Logs
+*.log
+
+# Raw downloads: several FRED series are under third-party copyright
+# (Moody's, Cboe, NASDAQ, University of Michigan); regenerate them with
+# code/01_get_data.py (see README).
+data/raw/
+
+# Editor settings
+.idea/
