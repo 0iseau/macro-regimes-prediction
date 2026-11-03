@@ -148,20 +148,23 @@ def main() -> int:
     started = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
     rows, failures = [], []
-    for series_id in SERIES:
+    print(f"Downloading {len(SERIES)} FRED series and Shiller's data to {RAW}", flush=True)
+    for i, series_id in enumerate(SERIES, start=1):
+        print(f"[{i:2d}/{len(SERIES)}] {series_id} ...", end=" ", flush=True)
         try:
             rows.append(get_fred(series_id))
-            print(f"ok   {series_id}", flush=True)
+            print("ok", flush=True)
         except Exception as exc:  # one bad series must not stop the others
             failures.append((series_id, str(exc)))
-            print(f"FAIL {series_id}: {exc}", flush=True)
+            print(f"FAIL: {exc}", flush=True)
         time.sleep(PAUSE)
+    print("[--] Shiller ...", end=" ", flush=True)
     try:
         rows.append(get_shiller())
-        print("ok   SHILLER", flush=True)
+        print("ok", flush=True)
     except Exception as exc:
         failures.append(("SHILLER", str(exc)))
-        print(f"FAIL SHILLER: {exc}", flush=True)
+        print(f"FAIL: {exc}", flush=True)
 
     inventory = pd.DataFrame(rows)
     inventory.to_csv(RAW / "inventory.csv", index=False)

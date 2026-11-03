@@ -15,8 +15,12 @@ FIGURES = ROOT / "figures"
 HEADERS = {"User-Agent": "Mozilla/5.0 (academic project; HEC Lausanne)"}
 
 
-def download(url: str, retries: int = 4, timeout: float = 60.0) -> bytes:
-    """GET a URL and return its body, retrying transient failures with backoff."""
+def download(url: str, retries: int = 3, timeout: tuple = (10, 30)) -> bytes:
+    """GET a URL and return its body, retrying transient failures with backoff.
+
+    The timeout is (connect, read) in seconds: short enough that a blocked
+    network fails within about a minute instead of looking frozen.
+    """
     for attempt in range(retries):
         try:
             resp = requests.get(url, headers=HEADERS, timeout=timeout)
@@ -25,4 +29,4 @@ def download(url: str, retries: int = 4, timeout: float = 60.0) -> bytes:
         except requests.RequestException as exc:
             if attempt == retries - 1:
                 raise RuntimeError(f"download failed after {retries} tries: {url}") from exc
-            time.sleep(5 * 2 ** attempt)
+            time.sleep(2 * 2 ** attempt)
